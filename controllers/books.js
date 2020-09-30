@@ -2,27 +2,19 @@ const books = require('../models/books.js')();
 
 module.exports = () => {
 
-  const getController = (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    return res.json(books.get());
+  const getController = async (req, res) => {
+    res.json(await books.get());
   }
 
-  const getById = (req, res) => {
-    res.setHeader('Content-Type', 'application/json');
-    const result = books.get(req.params.id);
-    if (result.error) {
-      return res.status(404).json({
-        error: "Invalid ID"
-      });
-    }
-    res.json(books.get(req.params.id));
+  const getById = async (req, res) => {
+    res.json({ error: "byId not implemented yet"});
   }
 
-  const postController = (req, res) => {
+  const postController = async (req, res) => {
     const name = req.body.name;
     const author = req.body.author;
-    books.add(name, author);
-    return res.end(`POST: ${name}`);
+    const result = await books.add(name, author);
+    res.json(result);
   }
 
   return {
