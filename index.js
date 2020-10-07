@@ -1,36 +1,36 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require("express");
+const bodyParser = require("body-parser");
 
-const hostname = '0.0.0.0';
+const hostname = "0.0.0.0";
 const port = process.env.PORT || 3000;
 
-const authorController = require('./controllers/authors')();
-const booksController = require('./controllers/books')();
+const authorController = require("./controllers/authors")();
+const booksController = require("./controllers/books")();
 
-const app = module.exports = express();
+const app = (module.exports = express());
 
 // logging
 app.use((req, res, next) => {
   // Display log for requests
-  console.log('[%s] %s -- %s', new Date(), req.method, req.url);
+  console.log("[%s] %s -- %s", new Date(), req.method, req.url);
   next();
 });
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 // Get all books
-app.get('/books', booksController.getController);
+app.get("/books", booksController.getController);
 // Add a book
-app.post('/books', booksController.postController);
+app.post("/books", booksController.postController);
 // A book
-app.get('/books/:id', booksController.getById);
-
+app.get("/books/:id", booksController.getById);
 
 // Get all authors
-app.get('/authors', authorController.getController);
+app.get("/authors", authorController.getController);
 // Add a author
-app.post('/authors', authorController.postController);
-
+app.post("/authors", authorController.postController);
+// An Author
+app.get("/authors/:id", authorController.getById);
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
@@ -40,6 +40,6 @@ app.listen(port, hostname, () => {
 app.use((req, res) => {
   res.status(404).json({
     error: 404,
-    message: 'Route not found',
+    message: "Route not found",
   });
 });

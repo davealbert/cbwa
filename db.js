@@ -1,5 +1,5 @@
 const uri = process.env.MONGO_URI;
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 const DB_NAME = "book-store";
 const MONGO_OPTIONS = { useUnifiedTopology: true, useNewUrlParser: true };
 
@@ -18,13 +18,13 @@ module.exports = () => {
     });
   };
 
-  const get = (collectionName) => {
+  const get = (collectionName, query = {}) => {
     return new Promise((resolve, reject) => {
       MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
         const db = client.db(DB_NAME);
         const collection = db.collection(collectionName);
 
-        collection.find({}).toArray((err, docs) => {
+        collection.find(query).toArray((err, docs) => {
           resolve(docs);
           client.close();
         });
@@ -50,7 +50,6 @@ module.exports = () => {
     add,
   };
 };
-
 
 // async function getDocs(collectionName) {
 //   const docs = await db.get(collectionName);
