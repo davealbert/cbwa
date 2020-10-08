@@ -18,6 +18,12 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+  res.json({
+    hello: "world",
+  });
+});
+
 // Get all books
 app.get("/books", booksController.getController);
 // Get all books with authors
