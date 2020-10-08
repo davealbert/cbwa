@@ -5,6 +5,10 @@ module.exports = () => {
     res.json(await authors.get());
   };
 
+  const populatedController = async (reg, res) => {
+    res.json(await authors.aggregateWithBooks());
+  };
+
   const getById = async (req, res) => {
     res.json(await authors.get(parseInt(req.params.id)));
   };
@@ -19,5 +23,6 @@ module.exports = () => {
     getController,
     postController,
     getById,
+    populatedController,
   };
 };

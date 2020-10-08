@@ -37,8 +37,29 @@ module.exports = () => {
       MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
         const db = client.db(DB_NAME);
         const collection = db.collection(collectionName);
+
         collection.insertOne(item, (err, result) => {
           resolve(result);
+          client.close();
+        });
+      });
+    });
+  };
+
+  const aggregate = (collectionName, pipeline = []) => {
+    return new Promise((resolve, reject) => {
+      MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
+        const db = client.db(DB_NAME);
+        const collection = db.collection(collectionName);
+
+        collection.aggregate(pipeline).toArray((err, docs) => {
+          if (err) {
+            console.log(" --- aggregate ERROR ---");
+            console.log(err);
+          }
+
+          resolve(docs);
+          client.close();
         });
       });
     });
@@ -48,6 +69,7 @@ module.exports = () => {
     count,
     get,
     add,
+    aggregate,
   };
 };
 
@@ -64,3 +86,49 @@ module.exports = () => {
 // addDoc('authors', { name: 'William Gibson' });
 // addDoc('authors', { name: 'Neil Stephenson' });
 // getDocs('authors');
+
+// async function getBooks() {
+//   const pipeline = [
+//     {
+//       $lookup: {
+//         from: "authors",
+//         localField: "author",
+//         foreignField: "id",
+//         as: "a",
+//       },
+//     },
+//     {
+//       $project: {
+//         id: 1,
+//         name: 1,
+//         author: {
+//           $arrayElemAt: ["$a", 0],
+//         },
+//       },
+//     },
+//   ];
+
+//   const docs = await db.aggregate("books", pipeline);
+//   console.log(JSON.stringify(docs, 0, 2));
+// }
+
+// async function getAuthors() {
+//   const pipeline = [
+//     {
+//       $lookup: {
+//         from: "books",
+//         localField: "id",
+//         foreignField: "author",
+//         as: "books",
+//       },
+//     },
+//   ];
+
+//   const docs = await db.aggregate("authors", pipeline);
+//   console.log(JSON.stringify(docs,0, 2));
+// }
+
+// async function getAuthors() {
+//   const docs = await db.aggregate("authors");
+//   console.log(JSON.stringify(docs, 0, 2));
+// }
