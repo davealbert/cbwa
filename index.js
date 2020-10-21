@@ -27,7 +27,7 @@ app.use(async (req, res, next) => {
   };
 
   const suppliedKey = req.headers["x-api-key"];
-  req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const clientIp = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   // Check Pre-shared key
   if (!suppliedKey) {
